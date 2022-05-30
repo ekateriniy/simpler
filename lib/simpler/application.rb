@@ -28,6 +28,7 @@ module Simpler
 
     def call(env)
       route = @router.route_for(env)
+      return wrong_path if route.nil?
       controller = route.controller.new(env)
       action = route.action
 
@@ -54,5 +55,12 @@ module Simpler
       controller.make_response(action)
     end
 
+    def wrong_path
+      [
+        404,
+        { 'Content-Type' => 'text/html' },
+        ['Page not found']
+      ]
+    end
   end
 end
